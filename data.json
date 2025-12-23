@@ -1,0 +1,58 @@
+{
+  "events": [
+    {
+      "id": "e78a",
+      "title": "festival",
+      "description": "festival ra2iii3",
+      "category": "musique",
+      "price": 0,
+      "image": "https://i.pinimg.com/1200x/94/25/ab/9425abb8f5123f73d6c5674ca4b7771c.jpg",
+      "date": "2026-01-02"
+    },
+    {
+      "id": "ce61",
+      "title": "pitch my job",
+      "description": "pitch my job",
+      "category": "Workshop",
+      "date": "2026-01-03",
+      "price": 0
+    },
+    {
+      "id": "684a",
+      "title": "hello",
+      "description": "hello hello",
+      "category": "Sports",
+      "date": "2025-12-24",
+      "price": 581,
+      "image": ""
+    },
+    {
+      "id": "7c8e",
+      "title": "lifemede",
+      "description": "ramadan",
+      "category": "Networking",
+      "date": "2025-12-26",
+      "price": 10,
+      "image": "blob:http://localhost:5173/c406a76a-df87-46cf-8b99-9ec3913373c7"
+    },
+    {
+      "id": "2354",
+      "title": "yassine",
+      "description": "jdjfnksdn ",
+      "category": "Exhibition",
+      "date": "2026-01-07",
+      "price": 21,
+      "image": "https://res.cloudinary.com/dh6r1fw3q/image/upload/v1766501587/events/knnupa2euatkwqdjucwz.jpg"
+    },
+    {
+      "id": "73ba",
+      "title": "test price",
+      "description": "test pricetest price test price",
+      "category": "Family Day",
+      "date": "2026-01-03",
+      "price": 10,
+      "image": "https://res.cloudinary.com/dh6r1fw3q/image/upload/v1766502039/events/x4wiagrjrxhqhoaitymh.gif"
+    }
+  ],
+  "commandes": []
+}

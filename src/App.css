@@ -1,0 +1,92 @@
+body{
+  font-family: sans-serif;
+}
+
+.admin-form-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 2rem;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.admin-form input,
+.admin-form select,
+.admin-form textarea {
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+/* .SelectInput {
+  color: #757575;
+} */
+
+.admin-form button {
+  background: #f5c542;
+  color: #000;
+  border: none;
+  padding: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.success {
+  color: green;
+  margin-bottom: 1rem;
+}
+
+
+/* ////////////////////////////////ERRORS/////////////////////////////////////////////////////// */
+/* ===== MESSAGE D'ERREUR ===== */
+.error {
+  margin-top: 0px;
+  font-size: 13px;
+  font-weight:lighter;
+  font-style: italic;
+  color: #fd2313;
+  letter-spacing: 0.2px;
+}
+
+/* ===== INPUT EN ERREUR ===== */
+.admin-form input,
+.admin-form textarea,
+.admin-form select {
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  padding: 10px 12px;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+ 
+}
+.admin-form:has(.error){
+  gap: 0px;
+}
+
+/* Quand il y a une erreur → inputs rouges */
+.admin-form:has(.error) input,
+.admin-form:has(.error) textarea,
+.admin-form:has(.error) select {
+  border-color: #f04438;
+}
+
+
+/* Focus reste clean */
+.admin-form input:focus,
+.admin-form textarea:focus,
+.admin-form select:focus {
+  outline: none;
+  border-color: #1570ef;
+  box-shadow: 0 0 0 3px rgba(21, 112, 239, 0.15);
+}
+
+/* Focus + erreur */
+.admin-form:has(.error) input:focus,
+.admin-form:has(.error) textarea:focus,
+.admin-form:has(.error) select:focus {
+  border-color: #d92d20;
+  box-shadow: 0 0 0 3px rgba(240, 68, 56, 0.15);
+}
+
