@@ -1,7 +1,5 @@
-import { useState, useRef } from "react";
-import axios from "axios";
+import React, { useState, useRef } from "react";
 import { log } from "three";
-import toast from "react-hot-toast";
 const EVENT_CATEGORIES = [
   "Music",
   "Party",
@@ -11,145 +9,57 @@ const EVENT_CATEGORIES = [
   "Family Day",
   "Other",
 ];
-
-export default function AddEvent() {
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    category: "",
-    date: "",
-    price: "",
-    image: "",
-  });
+export default function UpdateEventModal({ isOpen, onClose, initialData, onSubmit }) {
+  const [formData, setFormData] = useState(initialData || {});
   const [errors, setErrors] = useState({});
-
   const [uploading, setUploading] = useState(false);
-  // const [success, setSuccess] = useState(false);
-
   const imageInputRef = useRef(null);
 
+  
+
+  if (!isOpen) return null;
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const handleImageUpload = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      setFormData(prev => ({ ...prev, image: reader.result }));
+    };
+    reader.readAsDataURL(file);
+  }
+};
 
-    setUploading(true);
 
-    const data = new FormData();
-    data.append("file", file);
-    data.append("upload_preset", "preset_des_evenements");
-    data.append("folder", "events");
-
-    try {
-      const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/dh6r1fw3q/image/upload",
-        data
-      );
-
-      setFormData((prev) => ({
-        ...prev,
-        image: res.data.secure_url,
-      }));
-    } catch (error) {
-      console.error("Cloudinary upload failed", error);
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    const newErrors = {};
-
-    if (!formData.title.trim()) newErrors.title = "Le titre est obligatoire";
-    if (!formData.description.trim())
-      newErrors.description = "La description est obligatoire";
-    if (!formData.category) newErrors.category = "Sélectionnez une catégorie";
-    if (!formData.date) newErrors.date = "La date est obligatoire";
-    if (!formData.price && formData.price !== 0)
-      newErrors.price = "Le prix est obligatoire";
-    if (!formData.image) newErrors.image = "Une image est obligatoire";
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    setErrors({});
-    await axios.post("https://694e4ee4b5bc648a93bff060.mockapi.io/api/events", {
-      ...formData,
-      price: Number(formData.price),
-    });
-
-    toast.success("Event added successfully 🎉", {
-      style: {
-        border: "1px solid #22C55E", // green-500
-        padding: "14px 16px",
-        color: "#065F46",
-        background: "#ECFDF5",
-        fontWeight: "500",
-      },
-      iconTheme: {
-        primary: "#22C55E",
-        secondary: "#ECFDF5",
-      },
-    });
-
-    setFormData({
-      title: "",
-      description: "",
-      category: "",
-      date: "",
-      price: "",
-      image: "",
-    });
-
-    if (imageInputRef.current) {
-      imageInputRef.current.value = "";
-    }
+    onSubmit(formData);
+    onClose();
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="fixed inset-0 min-h-screen bg-black/50 flex items-center justify-center z-50">
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-          Add New Event
-        </h2>
-
-        {/* {success && (
-        <p className="mb-4 text-sm text-green-600 font-medium">
-          Event added successfully ✅
-        </p>
-      )} */}
-
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Update Event</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* TITLE */}
-          <div>
-            <input
-              name="title"
-              placeholder="Event title"
-              value={formData.title}
-              onChange={handleChange}
-              className={`w-full rounded-md border px-3 py-2 text-sm 
-              focus:outline-none focus:ring-2
-              ${
-                errors.title
-                  ? "border-red-500 focus:ring-red-200"
-                  : "border-gray-300 focus:ring-yellow-200"
-              }
-            `}
-            />
-            {errors.title && (
-              <p className="mt-1 text-xs text-red-500">{errors.title}</p>
-            )}
-          </div>
+          {/* REPRIS DU FORMULAIRE AddEvent */}
+          <label>Title</label>
+          <input
+            name="title"
+            placeholder="Event title"
+            value={formData.title || ""}
+            onChange={handleChange}
+            className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 ${
+              errors.title ? "border-red-500 focus:ring-red-200" : "border-gray-300 focus:ring-yellow-200"
+            }`}
+          />
 
-          {/* DESCRIPTION */}
-          <div>
+            <label>Description</label>
             <textarea
               name="description"
               placeholder="Event description"
@@ -168,10 +78,9 @@ export default function AddEvent() {
             {errors.description && (
               <p className="mt-1 text-xs text-red-500">{errors.description}</p>
             )}
-          </div>
 
-          {/* CATEGORY */}
-          <div>
+            <div>
+            <label>Category</label>
             <select
               name="category"
               value={formData.category}
@@ -201,6 +110,7 @@ export default function AddEvent() {
           </div>
 
           <div>
+            <label>Event date</label>
             <input
               type="date"
               name="date"
@@ -221,6 +131,7 @@ export default function AddEvent() {
           </div>
 
           <div>
+            <label>Price</label>
             <input
               type="number"
               name="price"
@@ -241,7 +152,6 @@ export default function AddEvent() {
               <p className="mt-1 text-xs text-red-500">{errors.price}</p>
             )}
           </div>
-
           <div className="w-full">
             <label
               className={`
@@ -260,6 +170,7 @@ export default function AddEvent() {
               <span className="truncate">
                 {formData.image ? "Image sélectionnée" : "Choisir une image"}
               </span>
+              
 
               <span
                 className="
@@ -283,41 +194,37 @@ export default function AddEvent() {
                 className="hidden"
               />
             </label>
+              {formData.image && (
+                <img
+                  src={formData.image}
+                  alt="Preview"
+                  className="mt-2 w-24 h-24 object-cover rounded-md border"
+                />
+              )}
 
             {errors.image && (
               <p className="mt-1 text-xs text-red-500">{errors.image}</p>
             )}
           </div>
 
-          {/* IMAGE PREVIEW */}
-          {formData.image && (
-            <img
-              src={formData.image}
-              alt="Preview"
-              className="mt-2 w-24 h-24 object-cover rounded-md border"
-            />
-          )}
 
-          {uploading && (
-            <p className="text-sm text-gray-500">Uploading image...</p>
-          )}
-
-          <button
-            type="submit"
-            disabled={uploading}
-            className="
-            w-full mt-4
-            bg-[#f5c542] text-gray-900
-            py-2 rounded-md
-            font-semibold
-            hover:bg-[#e0b534]
-            transition
-            disabled:opacity-50
-            disabled:cursor-not-allowed
-          "
-          >
-            Add Event
-          </button>
+          
+          
+          <div className="flex gap-3 mt-4">
+            <button
+              type="submit"
+              className="flex-1 bg-[#f5c542] text-gray-900 py-2 rounded-md font-semibold hover:bg-[#e0b534] transition"
+            >
+              Update Event
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-400 transition"
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       </div>
     </div>
