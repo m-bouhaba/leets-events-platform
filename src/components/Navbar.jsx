@@ -1,62 +1,82 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import { ShoppingCart, LogIn } from "lucide-react";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import CartSidebar from "./CartSidebar";
 
 export default function Navbar() {
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const cartItems = useSelector((state) => state.cart.items);
+
+  const totalQuantity = cartItems.reduce(
+    (sum, item) => sum + item.quantity,
+    0
+  );
+
   return (
-    <nav className="bg-[#0F0F0F] text-white px-6 py-4 flex items-center justify-between">
-      {/* Logo */}
-      <NavLink to="/" className="text-xl font-bold tracking-wide">
-        <span className="text-yellow-400">Leets</span>Events
-      </NavLink>
+    <>
+      <nav className="fixed top-0 left-0 w-full z-50 bg-black/80 backdrop-blur border-b border-yellow-400">
+        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
 
-      {/* Links */}
-      <ul className="hidden md:flex items-center gap-8 text-sm font-medium">
-        <li>
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              isActive
-                ? "text-yellow-400"
-                : "hover:text-yellow-300 transition"
-            }
-          >
-            Add
-          </NavLink>
-        </li>
+          {/* Logo */}
+          <Link to="/" className="flex items-center">
+            <img
+              src="/leetsevents.jpg"
+              alt="leetsevents logo"
+              className="h-14 w-auto object-contain hover:scale-105 transition"
+            />
+          </Link>
 
-        <li>
-          <NavLink
-            to="/events"
-            className={({ isActive }) =>
-              isActive
-                ? "text-yellow-400"
-                : "hover:text-yellow-300 transition"
-            }
-          >
-            Events
-          </NavLink>
-        </li>
+          {/* Links */}
+          <div className="hidden md:flex items-center gap-8">
+            <NavLink
+              to="/events"
+              className="text-white hover:text-yellow-400 transition"
+            >
+              Events
+            </NavLink>
+            <NavLink
+              to="/contact"
+              className="text-white hover:text-yellow-400 transition"
+            >
+              Contact
+            </NavLink>
+          </div>
 
-        {/* <li>
-          <NavLink
-            to="/contact"
-            className={({ isActive }) =>
-              isActive
-                ? "text-yellow-400"
-                : "hover:text-yellow-300 transition"
-            }
-          >
-            Contact
-          </NavLink>
-        </li> */}
-      </ul>
+          {/* Actions */}
+          <div className="flex items-center gap-5">
+            {/* Cart */}
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className="relative"
+            >
+              <ShoppingCart className="w-6 h-6 text-white hover:text-yellow-400 transition" />
 
-      {/* Admin */}
-      <NavLink
-        to="/admin"
-        className="bg-yellow-400 text-black px-4 py-2 rounded-md text-sm font-semibold hover:bg-yellow-300 transition"
-      >
-        Admin
-      </NavLink>
-    </nav>
+              {totalQuantity > 0 && (
+                <span className="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {totalQuantity}
+                </span>
+              )}
+            </button>
+
+            {/* Admin login */}
+            <Link
+              to="/admin/login"
+              className="flex items-center gap-1 text-white hover:text-yellow-400 transition"
+            >
+              <LogIn className="w-4 h-4" />
+              Admin
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* Cart Sidebar */}
+      <CartSidebar
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+      />
+    </>
   );
 }
