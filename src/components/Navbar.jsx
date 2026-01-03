@@ -31,6 +31,12 @@ export default function Navbar() {
           {/* Links */}
           <div className="hidden md:flex items-center gap-8">
             <NavLink
+              to="/home"
+              className="text-white hover:text-yellow-400 transition"
+            >
+              Home
+            </NavLink>
+            <NavLink
               to="/events"
               className="text-white hover:text-yellow-400 transition"
             >

@@ -1,12 +1,21 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   ShoppingBag,
   CalendarDays,
   LogOut,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function AdminSidebar() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("adminAuth");
+    toast.success("Logged out successfully 👋");
+    navigate("/admin/login");
+  };
+
   return (
     <aside className="w-64 h-screen bg-black border-r border-yellow-400 fixed left-0 top-0">
       {/* Logo */}
@@ -48,7 +57,13 @@ export default function AdminSidebar() {
 
         <NavLink
           to="/admin/events"
-          className="flex items-center gap-3 px-4 py-3 rounded-lg text-white hover:bg-white/10"
+          className={({ isActive }) =>
+            `flex items-center gap-3 px-4 py-3 rounded-lg transition ${
+              isActive
+                ? "bg-yellow-400 text-black"
+                : "text-white hover:bg-white/10"
+            }`
+          }
         >
           <CalendarDays size={18} />
           Events
@@ -57,7 +72,10 @@ export default function AdminSidebar() {
 
       {/* Footer */}
       <div className="absolute bottom-0 w-full p-4 border-t border-yellow-400">
-        <button className="flex items-center gap-2 text-red-400 hover:text-red-300">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 text-red-500 hover:text-red-300 transition"
+        >
           <LogOut size={18} />
           Logout
         </button>
