@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 
 export default function AdminLayout() {
   return (
-    <div className="flex bg-gray-100 min-h-screen">
+    <div className="flex bg-black min-h-screen">
       <AdminSidebar />
 
       {/* Content */}

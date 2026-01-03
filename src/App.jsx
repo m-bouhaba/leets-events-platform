@@ -14,6 +14,7 @@ import Home from "./pages/Home";
 import AdminLayout from "./admin/AdminLayout";
 import AdminEvents from "./pages/AdminEvents";
 import OrdersAdmin from "./pages/OrdersAdmin";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
@@ -36,7 +37,7 @@ function App() {
           <Route path="/success" element={<Success />} />
         </Route>
         <Route path="/admin" element={<AdminLayout />}>
-          {/* <Route path="dashboard" element={<Dashboard />} /> */}
+          <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="orders" element={<OrdersAdmin />} />
           <Route path="events" element={<AdminEvents />} />
 
