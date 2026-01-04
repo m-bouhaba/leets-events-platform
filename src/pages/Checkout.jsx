@@ -26,45 +26,57 @@ export default function Checkout() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+   const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        if (cartItems.length === 0) {
-            toast.error("Your cart is empty");
-            return;
-        }
+    if (cartItems.length === 0) {
+        toast.error("Your cart is empty");
+        return;
+    }
 
-        try {
-            setLoading(true);
+    if (!formData.fullName || !formData.email || !formData.phone) {
+        toast.error("Please fill all fields");
+        return;
+    }
 
-            const order = {
-                customer: formData,
-                items: cartItems,
-                total,
-                createdAt: new Date(),
-            };
+    try {
+        setLoading(true);
 
-            await axios.post(
-                "https://694e4ee4b5bc648a93bff060.mockapi.io/api/orders",
-                order
-            );
+        const order = {
+            customer: {
+                fullName: formData.fullName,
+                email: formData.email,
+                phone: formData.phone,
+            },
+            items: cartItems,
+            total,
+            createdAt: new Date().toISOString(),
+            source: "frontend-checkout",
+        };
 
-            dispatch(clearCart());
+        // 👉 SEND TO N8N
+        await axios.post(
+            "http://localhost:5678/webhook-test/a869e31e-d489-40a8-b840-87da9924b0c3",
+            order
+        );
 
-            toast.success(
-                total === 0
-                    ? "Registration confirmed 🎉"
-                    : "Payment successful 🎉"
-            );
+        dispatch(clearCart());
 
-            navigate("/success");
-        } catch (error) {
-            toast.error("Something went wrong");
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
-    };
+        toast.success(
+            total === 0
+                ? "Registration confirmed 🎉"
+                : "Payment successful 🎉"
+        );
+
+        navigate("/success");
+    } catch (error) {
+        console.error(error);
+        toast.error("Failed to process order");
+    } finally {
+        setLoading(false);
+    }
+};
+
 
 
     return (
