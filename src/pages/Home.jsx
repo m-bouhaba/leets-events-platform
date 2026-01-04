@@ -1,40 +1,175 @@
 import { FiChevronDown } from "react-icons/fi";
 
-export default function Hero() {
+export default function Home() {
   const scrollToEvents = () => {
     const section = document.getElementById("events");
     section?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <section className="relative w-full h-screen overflow-hidden">
-  <video
-    src="/hero.mp4"
-    autoPlay
-    loop
-    muted
-    playsInline
-    className="absolute inset-0 w-full h-full object-cover object-[30%_30%]"
-  />
+    <div className="bg-black text-white">
 
-      {/* DARK OVERLAY (optional mais recommandé) */}
-      <div className="absolute inset-0 bg-black/30" />
+      {/* ================= HERO ================= */}
+      <section className="relative w-full h-[90vh] overflow-hidden">
+        <video
+          src="/video1.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        />
 
-      {/* SWIPE DOWN */}
-      <button
-        onClick={scrollToEvents}
-        aria-label="Scroll to events"
-        className="
-          absolute bottom-8 left-1/2 -translate-x-1/2 z-20
-          flex flex-col items-center
-          text-yellow-400
-          hover:text-yellow-300
-          transition
-          animate-bounce
-        "
+        <div className="absolute inset-0 bg-black/30" />
+
+        {/* Swipe Down */}
+        <button
+          onClick={scrollToEvents}
+          aria-label="Scroll to events"
+          className="
+            absolute bottom-6 left-1/2 -translate-x-1/2 z-20
+            w-12 h-12 rounded-full
+            bg-yellow-400 text-black
+            flex items-center justify-center
+            hover:bg-yellow-300
+            transition
+            animate-bounce
+            shadow-lg
+          "
+        >
+          <FiChevronDown size={28} />
+        </button>
+      </section>
+
+      {/* ================= EVENTS ================= */}
+      <section
+        id="events"
+        className="py-24 px-6"
       >
-        <FiChevronDown size={38} />
-      </button>
-    </section>
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-yellow-400 mb-12">
+            Upcoming Events
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[1, 2, 3].map((_, i) => (
+              <div
+                key={i}
+                className="bg-white/5 rounded-xl overflow-hidden hover:scale-[1.02] transition"
+              >
+                <img
+                  src="/event-placeholder.jpg"
+                  alt="event"
+                  className="h-48 w-full object-cover"
+                />
+
+                <div className="p-5 space-y-2">
+                  <h3 className="font-semibold">
+                    English Café Karaoke Party
+                  </h3>
+                  <p className="text-sm text-white/70">
+                    Speaking session only in English. Fun, vibes & connection.
+                  </p>
+
+                  <span className="text-yellow-400 font-bold">
+                    Free
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================= ABOUT ================= */}
+      <section className="bg-yellow-400 text-black py-24 px-6">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+          <div>
+            <h2 className="text-3xl font-bold mb-6">
+              More than events.  
+              It’s a community.
+            </h2>
+
+            <p className="leading-relaxed">
+              Leets Events was born from a simple idea: creating real human
+              connections through meaningful events.
+              <br /><br />
+              No pressure. No judgment. Just moments that matter.
+            </p>
+          </div>
+
+          <img
+            src="/community.jpeg"
+            alt="community"
+            className="rounded-xl shadow-xl"
+          />
+        </div>
+      </section>
+
+      {/* ================= GALLERY ================= */}
+      <section className="py-24 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-yellow-400 mb-12">
+            Memories
+          </h2>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+           
+              <img
+                src={"memo.jpeg"}
+                alt="memory"
+                className="
+                  h-48 w-full object-cover rounded-lg
+                  hover:scale-105 transition
+                "
+              />
+               <img
+            src="/memo1.jpeg"
+            alt="community"
+            className="
+                  h-48 w-full object-cover rounded-lg
+                  hover:scale-105 transition
+                "
+          />
+           <img
+                src={"memo.jpeg"}
+                alt="memory"
+                className="
+                  h-48 w-full object-cover rounded-lg
+                  hover:scale-105 transition
+                "
+              />
+              <img
+            src="/memo1.jpeg"
+            alt="community"
+            className="
+                  h-48 w-full object-cover rounded-lg
+                  hover:scale-105 transition
+                "
+          />
+           
+          </div>
+        </div>
+      </section>
+
+      {/* ================= CTA ================= */}
+      <section className="bg-yellow-400 text-black py-24 text-center px-6">
+        <h2 className="text-3xl font-bold mb-6">
+          Ready to join the next experience?
+        </h2>
+
+        <a
+          href="/events"
+          className="
+            inline-block bg-black text-yellow-400
+            px-8 py-4 rounded-full
+            font-semibold hover:bg-gray-900 transition
+          "
+        >
+          Explore Events
+        </a>
+      </section>
+
+    </div>
   );
 }
