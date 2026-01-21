@@ -32,6 +32,32 @@ export default function AdminEvents() {
   }, []);
 
   /* ================= HANDLERS ================= */
+
+  const handleUpdateEvent = async (updatedEvent) => {
+  try {
+    await axios.put(
+      `https://694e4ee4b5bc648a93bff060.mockapi.io/api/events/${updatedEvent.id}`,
+      {
+        title: updatedEvent.title,
+        description: updatedEvent.description,
+        category: updatedEvent.category,
+        date: updatedEvent.date,
+        price: Number(updatedEvent.price),
+        image: updatedEvent.image,
+      }
+    );
+
+    toast.success("Event updated successfully ✨");
+
+    // 🔄 REFETCH depuis MockAPI (IMPORTANT)
+    fetchEvents();
+
+  } catch (error) {
+    console.error(error);
+    toast.error("Failed to update event");
+  }
+};
+
   const handleDeleteConfirm = async () => {
     await axios.delete(
       `https://694e4ee4b5bc648a93bff060.mockapi.io/api/events/${selectedEvent.id}`
@@ -204,15 +230,7 @@ export default function AdminEvents() {
           isOpen={isUpdateOpen}
           onClose={() => setIsUpdateOpen(false)}
           initialData={selectedEvent}
-          onSubmit={(updatedEvent) => {
-            setEvents(
-              events.map((e) =>
-                e.id === updatedEvent.id ? updatedEvent : e
-              )
-            );
-            toast.success("Event updated ✅");
-            setIsUpdateOpen(false);
-          }}
+          onSubmit={handleUpdateEvent}
         />
       )}
 
