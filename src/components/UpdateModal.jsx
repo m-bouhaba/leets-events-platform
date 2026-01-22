@@ -5,7 +5,6 @@ const EVENT_CATEGORIES = [
   "Music",
   "Party",
   "Conference",
-  "Exhibition",
   "Sports",
   "Family Day",
   "Other",
@@ -17,21 +16,26 @@ export default function UpdateEventModal({
   initialData,
   onSubmit,
 }) {
-  if (!isOpen) return null;
-
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState(null);
+  const [loading, setLoading] = useState(false);
   const imageInputRef = useRef(null);
 
-  /* 🔄 sync data when opening modal */
+  /* 🔄 sync data when modal opens */
   useEffect(() => {
-    if (initialData) {
-      setFormData(initialData);
+    if (isOpen && initialData) {
+      // ⚠️ copie propre + garde l'id
+      setFormData({ ...initialData });
     }
-  }, [initialData]);
+  }, [isOpen, initialData]);
+
+  if (!isOpen || !formData) return null;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleImageUpload = (e) => {
@@ -39,7 +43,7 @@ export default function UpdateEventModal({
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = () => {
+    reader.onloadend = () => {
       setFormData((prev) => ({
         ...prev,
         image: reader.result,
@@ -48,28 +52,40 @@ export default function UpdateEventModal({
     reader.readAsDataURL(file);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(formData);
-    onClose();
+
+    if (!formData.id) {
+      console.error("❌ Missing event id", formData);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await onSubmit(formData); // ⬅️ ON ATTEND
+      onClose();                // ⬅️ on ferme SEULEMENT après succès
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
       {/* Overlay */}
       <div
-        onClick={onClose}
+        onClick={loading ? undefined : onClose}
         className="fixed inset-0 bg-black/70 z-40"
       />
 
       {/* Modal */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center px-4 h-">
+      <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
         <div className="relative w-full max-w-lg bg-black border border-yellow-400/30 rounded-xl p-6">
 
           {/* Close */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-gray-400 hover:text-yellow-400 transition"
+            disabled={loading}
+            className="absolute top-4 right-4 text-gray-400 hover:text-yellow-400 transition disabled:opacity-50"
           >
             <X />
           </button>
@@ -82,9 +98,9 @@ export default function UpdateEventModal({
             {/* TITLE */}
             <input
               name="title"
-              value={formData.title || ""}
+              value={formData.title ?? ""}
               onChange={handleChange}
-              placeholder="Event title"
+              required
               className="w-full bg-black border border-white/10 px-3 py-2 rounded text-white focus:ring-2 focus:ring-yellow-400"
             />
 
@@ -92,17 +108,18 @@ export default function UpdateEventModal({
             <textarea
               name="description"
               rows={3}
-              value={formData.description || ""}
+              value={formData.description ?? ""}
               onChange={handleChange}
-              placeholder="Description"
+              required
               className="w-full bg-black border border-white/10 px-3 py-2 rounded text-white focus:ring-2 focus:ring-yellow-400 resize-none"
             />
 
             {/* CATEGORY */}
             <select
               name="category"
-              value={formData.category || ""}
+              value={formData.category ?? ""}
               onChange={handleChange}
+              required
               className="w-full bg-black border border-white/10 px-3 py-2 rounded text-white focus:ring-2 focus:ring-yellow-400"
             >
               <option value="">Select category</option>
@@ -117,8 +134,9 @@ export default function UpdateEventModal({
             <input
               type="date"
               name="date"
-              value={formData.date || ""}
+              value={formData.date ?? ""}
               onChange={handleChange}
+              required
               className="w-full bg-black border border-white/10 px-3 py-2 rounded text-white focus:ring-2 focus:ring-yellow-400"
             />
 
@@ -127,9 +145,8 @@ export default function UpdateEventModal({
               type="number"
               name="price"
               min="0"
-              value={formData.price || 0}
+              value={formData.price ?? 0}
               onChange={handleChange}
-              placeholder="Price (0 = Free)"
               className="w-full bg-black border border-white/10 px-3 py-2 rounded text-white focus:ring-2 focus:ring-yellow-400"
             />
 
@@ -166,15 +183,17 @@ export default function UpdateEventModal({
             <div className="flex gap-3 pt-4">
               <button
                 type="submit"
-                className="flex-1 bg-yellow-400 text-black py-2 rounded font-semibold hover:bg-yellow-300 transition"
+                disabled={loading}
+                className="flex-1 bg-yellow-400 text-black py-2 rounded font-semibold hover:bg-yellow-300 transition disabled:opacity-60"
               >
-                Update Event
+                {loading ? "Updating..." : "Update Event"}
               </button>
 
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 bg-white/10 text-white py-2 rounded hover:bg-white/20 transition"
+                disabled={loading}
+                className="flex-1 bg-white/10 text-white py-2 rounded hover:bg-white/20 transition disabled:opacity-50"
               >
                 Cancel
               </button>

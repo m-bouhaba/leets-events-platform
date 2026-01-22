@@ -6,6 +6,28 @@ export default function Home() {
     section?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const events = [
+    {
+      title: "Coding Bootcamp",
+      description: "Learn to code with experts in one weekend.",
+      price: "150MAD",
+      img: "/coding.jpg",
+    },
+    {
+      title: "English Café Karaoke Party",
+      description: "Speaking session only in English. Fun, vibes & connection.",
+      price: "Free",
+      img: "/kara.jpg",
+    },
+    {
+      title: "Yoga & Wellness Session",
+      description: "Relax, stretch and connect with like-minded people.",
+      price: "50MAD",
+      img: "/yoga.jpg",
+    }
+    
+  ];
+
   return (
     <div className="bg-black text-white">
 
@@ -35,6 +57,7 @@ export default function Home() {
             transition
             animate-bounce
             shadow-lg
+            cursor-pointer
           "
         >
           <FiChevronDown size={28} />
@@ -52,28 +75,20 @@ export default function Home() {
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((_, i) => (
+            {events.slice(0, 3).map((event, i) => (
               <div
                 key={i}
                 className="bg-white/5 rounded-xl overflow-hidden hover:scale-[1.02] transition"
               >
                 <img
-                  src="/event-placeholder.jpg"
-                  alt="event"
+                  src={event.img}
+                  alt={event.title}
                   className="h-48 w-full object-cover"
                 />
-
                 <div className="p-5 space-y-2">
-                  <h3 className="font-semibold">
-                    English Café Karaoke Party
-                  </h3>
-                  <p className="text-sm text-white/70">
-                    Speaking session only in English. Fun, vibes & connection.
-                  </p>
-
-                  <span className="text-yellow-400 font-bold">
-                    Free
-                  </span>
+                  <h3 className="font-semibold">{event.title}</h3>
+                  <p className="text-sm text-white/70">{event.description}</p>
+                  <span className="text-yellow-400 font-bold">{event.price}</span>
                 </div>
               </div>
             ))}
