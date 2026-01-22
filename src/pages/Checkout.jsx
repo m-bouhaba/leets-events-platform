@@ -56,7 +56,8 @@ export default function Checkout() {
 
         // 👉 SEND TO N8N
         await axios.post(
-            "http://localhost:5678/webhook-test/a869e31e-d489-40a8-b840-87da9924b0c3",
+            "http://localhost:5678/webhook-test/event",
+            
             order
         );
 
