@@ -54,9 +54,14 @@ export default function Checkout() {
             source: "frontend-checkout",
         };
 
-        // 👉 SEND TO N8N
-        await axios.post(
-            "http://localhost:5678/webhook-test/event",
+        //  N8N
+        // await axios.post(
+        //     "http://localhost:5678/webhook-test/event",
+            
+        //     order
+        // );
+         await axios.post(
+            "https://694e4ee4b5bc648a93bff060.mockapi.io/api/orders",
             
             order
         );
